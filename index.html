@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>M&G Aromas | Luxo em Velas Artesanais</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bege: #d4a373;
+            --bege-ouro: #c49466;
+            --off-white: #faf9f6;
+            --cinza-claro: #f2efea;
+            --preto-luxo: #000000;
+            --preto-fosco: #1a1a1a;
+            --texto: #4a4a4a;
+            --transicao: all 0.4s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--off-white);
+            margin: 0;
+            color: var(--texto);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ══════════════════════════════
+           TOAST
+        ══════════════════════════════ */
+        #toast {
+            visibility: hidden;
+            min-width: 260px;
+            max-width: 90vw;
+            background-color: var(--preto-luxo);
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 14px 20px;
+            position: fixed;
+            z-index: 3000;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%);
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            border-bottom: 2px solid var(--bege-ouro);
+            opacity: 0;
+        }
+
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            animation: toastIn 0.4s ease forwards, toastOut 0.4s ease 2.5s forwards;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        /* ══════════════════════════════
+           BARRA CARRINHO
+        ══════════════════════════════ */
+        #barra-carrinho {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--preto-luxo);
+            color: white;
+            padding: 9px 5%;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        #btn-finalizar {
+            background: var(--bege-ouro);
+            color: #000;
+            border: none;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 0.58rem;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: none;
+            transition: background 0.3s, transform 0.2s;
+            white-space: nowrap;
+            min-height: 32px;
+        }
+
+        #btn-finalizar:hover {
+            background: #b5844f;
+            transform: translateY(-1px);
+        }
+
+        /* ══════════════════════════════
+           HEADER
+        ══════════════════════════════ */
+        .top-bar {
+            position: fixed;
+            top: 31px;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background-color: #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .logo-texto {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            letter-spacing: 8px;
+            color: #fff;
+            text-transform: uppercase;
+            text-decoration: none;
+            font-weight: 300;
+        }
+
+        .logo-ampersand {
+            font-style: italic;
+            color: var(--bege-ouro);
+            margin: 0 3px;
+        }
+
+        /* ══════════════════════════════
+           NAV DESKTOP
+        ══════════════════════════════ */
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            position: relative;
+        }
+
+        .nav-links-principais {
+            display: flex;
+            gap: 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 300;
+            transition: 0.4s;
+        }
+
+        nav a:hover {
+            color: var(--bege-ouro);
+        }
+
+        /* ══════════════════════════════
+           HAMBÚRGUER
+        ══════════════════════════════ */
+        .menu-hamburguer {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1001;
+            /* área de toque mínima */
+            min-width: 44px;
+            min-height: 44px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .menu-hamburguer span {
+            width: 22px;
+            height: 1px;
+            background-color: #fff;
+            transition: 0.4s;
+            display: block;
+        }
+
+        .menu-hamburguer.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .menu-hamburguer.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-hamburguer.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* ══════════════════════════════
+           MENU SUSPENSO
+        ══════════════════════════════ */
+        .menu-suspenso {
+            position: absolute;
+            top: 55px;
+            right: 0;
+            background: #000;
+            list-style: none;
+            padding: 20px 28px;
+            margin: 0;
+            display: none;
+            flex-direction: column;
+            gap: 18px;
+            border: 1px solid #222;
+            min-width: 160px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .menu-suspenso.active {
+            display: flex;
+            animation: menuFadeIn 0.3s ease;
+        }
+
+        @keyframes menuFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-suspenso a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: color 0.3s;
+            /* área de toque */
+            padding: 6px 0;
+            display: block;
+        }
+
+        .menu-suspenso a:hover {
+            color: var(--bege-ouro);
+        }
+
+        main {
+            margin-top: 101px;
+            /* 31px barra + 70px header */
+        }
+
+        /* ══════════════════════════════
+           HERO
+        ══════════════════════════════ */
+        .hero {
+            position: relative;
+            height: 78.5vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero-slides {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.38);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 850px;
+            padding: 0 24px;
+        }
+
+        .hero-content h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 300;
+            line-height: 1.3;
+            margin: 0;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: heroIn 1.2s ease 0.5s forwards;
+        }
+
+        @keyframes heroIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Dots slideshow */
+        .slide-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            gap: 10px;
+        }
+
+        .slide-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: background 0.4s, transform 0.3s;
+            border: none;
+            padding: 0;
+            /* área de toque */
+            position: relative;
+        }
+
+        .slide-dot::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+        }
+
+        .slide-dot.active {
+            background: var(--bege-ouro);
+            transform: scale(1.3);
+        }
+
+        /* ══════════════════════════════
+           VITRINE
+        ══════════════════════════════ */
+        .secao-vitrine {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 120px 5% 160px;
+        }
+
+        .grid-minimalista {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 60px 30px;
+        }
+
+        .card-vitrine {
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+        }
+
+        .img-wrapper {
+            width: 100%;
+            height: 420px;
+            overflow: hidden;
+            background: #fcfbf9;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .card-vitrine img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.2s ease;
+        }
+
+        .card-vitrine:hover img {
+            transform: scale(1.04);
+        }
+
+        .card-vitrine h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .descricao-produto {
+            font-size: 0.72rem;
+            font-weight: 300;
+            color: #888;
+            letter-spacing: 0.4px;
+            line-height: 1.9;
+            margin-bottom: 14px;
+            max-width: 90%;
+        }
+
+        .card-vitrine .preco {
+            font-size: 0.75rem;
+            color: var(--bege-ouro);
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+
+        /* Botão adicionar */
+        .btn-add-minimal {
+            background: none;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            color: #999;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            padding: 8px 0;
+            width: fit-content;
+            cursor: pointer;
+            transition: 0.4s;
+            min-height: 44px;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .card-vitrine:hover .btn-add-minimal,
+        .btn-add-minimal:hover {
+            border-bottom-color: var(--bege-ouro);
+            color: var(--bege-ouro);
+        }
+
+        .btn-add-minimal:active {
+            transform: scale(0.97);
+        }
+
+        /* Badge adicionado */
+        .badge-added {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: var(--preto-luxo);
+            color: var(--bege-ouro);
+            font-size: 0.55rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: opacity 0.4s, transform 0.4s;
+            pointer-events: none;
+        }
+
+        .badge-added.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Colunas desktop */
+        .v-col-6 {
+            grid-column: span 6;
+        }
+
+        .v-col-4 {
+            grid-column: span 4;
+        }
+
+        /* ══════════════════════════════
+           SCROLL REVEAL
+        ══════════════════════════════ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ══════════════════════════════
+           WHATSAPP
+        ══════════════════════════════ */
+        .whatsapp-float {
+            position: fixed;
+            width: 54px;
+            height: 54px;
+            bottom: 28px;
+            right: 28px;
+            background-color: #5f5244;
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 26px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+            z-index: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            background-color: #4a3e33;
+            color: #fff;
+        }
+
+        /* ══════════════════════════════
+           FOOTER
+        ══════════════════════════════ */
+        .footer-final {
+            background-color: var(--cinza-claro);
+            padding: 70px 8% 40px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-col h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .footer-col p {
+            font-size: 0.78rem;
+            line-height: 1.8;
+            color: #666;
+            margin: 0 0 4px;
+        }
+
+        .footer-col a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: var(--bege-ouro);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid #ddd;
+            padding-top: 28px;
+            font-size: 0.58rem;
+            letter-spacing: 3px;
+            color: #aaa;
+            margin-top: 50px;
+        }
+
+        /* ══════════════════════════════
+           MOBILE — até 768px
+        ══════════════════════════════ */
+        @media (max-width: 768px) {
+
+            /* Barra carrinho compacta */
+            #barra-carrinho {
+                padding: 8px 4%;
+                font-size: 0.6rem;
+                letter-spacing: 1.5px;
+                gap: 10px;
+                flex-wrap: nowrap;
+            }
+
+            #barra-carrinho span {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            #btn-finalizar {
+                font-size: 0.55rem;
+                padding: 5px 10px;
+                letter-spacing: 1.5px;
+                flex-shrink: 0;
+            }
+
+            /* Header */
+            .top-bar {
+                top: 31px;
+                /* mantém abaixo da barra sticky */
+                height: 60px;
+                padding: 0 4%;
+            }
+
+            .logo-texto {
+                font-size: 1.3rem;
+                letter-spacing: 6px;
+            }
+
+            /* Links principais somem — tudo no hambúrguer */
+            .nav-links-principais {
+                display: none;
+            }
+
+            /* Ajusta menu suspenso para não sair da tela */
+            .menu-suspenso {
+                right: 0;
+                min-width: 180px;
+                top: 50px;
+            }
+
+            /* main: 31px barra + 60px header */
+            main {
+                margin-top: 91px;
+            }
+
+            /* Hero */
+            .hero {
+                height: 70vh;
+            }
+
+            .hero-content h2 {
+                font-size: 1.8rem;
+                line-height: 1.4;
+            }
+
+            /* Vitrine */
+            .secao-vitrine {
+                padding: 70px 4% 100px;
+            }
+
+            /* Grid: 2 colunas até 480px, depois 1 */
+            .v-col-6,
+            .v-col-4 {
+                grid-column: span 6;
+            }
+
+            .grid-minimalista {
+                gap: 40px 16px;
+            }
+
+            .img-wrapper {
+                height: 260px !important;
+            }
+
+            .card-vitrine h3 {
+                font-size: 1.1rem;
+            }
+
+            .descricao-produto {
+                font-size: 0.68rem;
+                max-width: 100%;
+            }
+
+            /* Título da seção */
+            .secao-vitrine>div h2 {
+                font-size: 1.8rem !important;
+            }
+
+            /* Whatsapp não sobrepõe toast */
+            .whatsapp-float {
+                width: 48px;
+                height: 48px;
+                bottom: 80px;
+                /* acima do toast */
+                right: 16px;
+                font-size: 22px;
+            }
+
+            /* Footer */
+            .footer-final {
+                padding: 50px 6% 30px;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+        }
+
+        /* ══════════════════════════════
+           MOBILE PEQUENO — até 480px
+        ══════════════════════════════ */
+        @media (max-width: 480px) {
+
+            /* Barra: esconde texto, mostra só ícone + count + botão */
+            #barra-carrinho {
+                font-size: 0.58rem;
+                gap: 8px;
+            }
+
+            /* Header ainda mais compacto */
+            .top-bar {
+                height: 56px;
+            }
+
+            .logo-texto {
+                font-size: 1.2rem;
+                letter-spacing: 5px;
+            }
+
+            main {
+                margin-top: 87px;
+                /* 31px + 56px */
+            }
+
+            /* Hero menor */
+            .hero {
+                height: 60vh;
+            }
+
+            .hero-content h2 {
+                font-size: 1.5rem;
+            }
+
+            /* Grid: 1 coluna */
+            .v-col-6,
+            .v-col-4 {
+                grid-column: span 12;
+            }
+
+            .grid-minimalista {
+                gap: 48px 0;
+            }
+
+            .img-wrapper {
+                height: 300px !important;
+            }
+
+            .card-vitrine h3 {
+                font-size: 1.2rem;
+            }
+
+            /* Footer coluna única */
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+
+            .footer-final {
+                padding: 40px 5% 28px;
+            }
+        }
+
+        /* ══════════════════════════════
+           MOBILE MUITO PEQUENO — até 360px
+        ══════════════════════════════ */
+        @media (max-width: 360px) {
+            .logo-texto {
+                font-size: 1.1rem;
+                letter-spacing: 4px;
+            }
+
+            #barra-carrinho {
+                font-size: 0.54rem;
+            }
+
+            .hero-content h2 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="toast"></div>
+
+    <div id="barra-carrinho">
+        <span>
+            <i class="fa fa-shopping-bag" style="margin-right:5px; color: var(--bege-ouro);"></i>
+            <span id="cart-count">0</span> ITENS &nbsp;|&nbsp; R$ <span id="cart-total">0,00</span>
+        </span>
+        <button onclick="irParaCheckout()" id="btn-finalizar">FINALIZAR</button>
+    </div>
+
+    <header class="top-bar">
+        <a href="index.html" class="logo-texto">
+            M<span class="logo-ampersand">&</span>G
+        </a>
+        <nav class="nav-container">
+            <div class="nav-links-principais">
+                <a href="index.html">Jardim de Flores</a>
+                <a href="velas.html">Velas</a>
+            </div>
+            <div class="menu-hamburguer" id="hamburguer" onclick="toggleMenu()" aria-label="Menu" role="button">
+                <span></span><span></span><span></span>
+            </div>
+            <ul id="menuSuspenso" class="menu-suspenso">
+                <li><a href="index.html">Jardim de Flores</a></li>
+                <li><a href="velas.html">Velas</a></li>
+                <li><a href="origens.html">Origens</a></li>
+                <li><a href="cuidados.html">Cuidados</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <section class="hero">
+            <div class="hero-slides">
+                <div class="slide active" style="background-image: url('hero1.jpg');"></div>
+                <div class="slide" style="background-image: url('hero2.jpg');"></div>
+                <div class="slide" style="background-image: url('hero3.jpg');"></div>
+            </div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h2>Com o <em>perfume</em> certo, sua rotina pode ser <em>extraordinária</em>.</h2>
+            </div>
+            <div class="slide-dots" id="slideDots"></div>
+        </section>
+
+        <section class="secao-vitrine" id="loja">
+            <div style="text-align: center; margin-bottom: 80px;" class="reveal">
+                <h2
+                    style="font-family:'Cormorant Garamond'; font-size: 2.5rem; font-weight: 300; font-style: italic; margin-bottom: 12px;">
+                    Coleção Jardim de Flores</h2>
+            </div>
+
+            <div class="grid-minimalista">
+
+                <div class="card-vitrine v-col-6 reveal">
+                    <div class="img-wrapper">
+                        <img src="vela1.jpg" alt="Jardim de Figueiras" loading="lazy">
+                        <span class="badge-added" id="badge-0">✓ Adicionado</span>
+                    </div>
+                    <h3>Jardim de Figueiras</h3>
+                    <p class="descricao-produto">175g de um aroma com notas de figo maduro, folhas verdes e um toque de
+                        madeira.</p>
+                    <span class="preco">R$ 64,90</span>
+                    <button class="btn-add-minimal" onclick="adicionar('Jardim de Figueiras', 64.90, 'vela1.jpg', 0)">+
+                        Adicionar</button>
+                </div>
+
+                <div class="card-vitrine v-col-6 reveal" style="transition-delay: 0.1s">
+                    <div class="img-wrapper">
+                        <img src="vela2.jpg" alt="Lumière Cítrica" loading="lazy">
+                        <span class="badge-added" id="badge-1">✓ Adicionado</span>
+                    </div>
+                    <h3>Lumière Cítrica</h3>
+                    <p class="descricao-produto">200ml de uma combinação vibrante de bergamota, limão siciliano e um
+                        toque de verbena.</p>
+                    <span class="preco">R$ 64,90</span>
+                    <button class="btn-add-minimal" onclick="adicionar('Lumière Cítrica', 64.90, 'vela2.jpg', 1)">+
+                        Adicionar</button>
+                </div>
+
+                <div class="card-vitrine v-col-4 reveal" style="transition-delay: 0.15s">
+                    <div class="img-wrapper" style="height: 350px;">
+                        <img src="vela3.jpg" alt="Vanilla" loading="lazy">
+                        <span class="badge-added" id="badge-2">✓ Adicionado</span>
+                    </div>
+                    <h3>Vanilla</h3>
+                    <p class="descricao-produto">175ml de um doce e reconfortante aroma, com notas de baunilha cremosa.
+                    </p>
+                    <span class="preco">R$ 64,90</span>
+                    <button class="btn-add-minimal" onclick="adicionar('Vanilla', 64.90, 'vela3.jpg', 2)">+
+                        Adicionar</button>
+                </div>
+
+                <div class="card-vitrine v-col-4 reveal" style="transition-delay: 0.2s">
+                    <div class="img-wrapper" style="height: 350px;">
+                        <img src="vela4.jpg" alt="Flor de Cerejeira" loading="lazy">
+                        <span class="badge-added" id="badge-3">✓ Adicionado</span>
+                    </div>
+                    <h3>Flor de Cerejeira</h3>
+                    <p class="descricao-produto">50g de uma essência delicada e floral, com notas de cerejeira em flor.
+                    </p>
+                    <span class="preco">R$ 64,90</span>
+                    <button class="btn-add-minimal" onclick="adicionar('Flor de Cerejeira', 64.90, 'vela4.jpg', 3)">+
+                        Adicionar</button>
+                </div>
+
+                <div class="card-vitrine v-col-4 reveal" style="transition-delay: 0.25s">
+                    <div class="img-wrapper" style="height: 350px;">
+                        <img src="vela5.jpg" alt="Chá Branco" loading="lazy">
+                        <span class="badge-added" id="badge-4">✓ Adicionado</span>
+                    </div>
+                    <h3>Chá Branco</h3>
+                    <p class="descricao-produto">60ml de uma fragrância refrescante e suave, com notas de chá branco.
+                    </p>
+                    <span class="preco">R$ 64,90</span>
+                    <button class="btn-add-minimal" onclick="adicionar('Chá Branco', 64.90, 'vela5.jpg', 4)">+
+                        Adicionar</button>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <a href="https://wa.me/5554996343116?text=Olá! Gostaria de saber mais sobre as velas." class="whatsapp-float"
+        target="_blank" rel="noopener" aria-label="Contato via WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <footer class="footer-final" id="contacto">
+        <div class="footer-container">
+            <div class="footer-col">
+                <p class="logo-texto" style="color: var(--preto-luxo); font-size: 1.4rem; margin-bottom: 12px;">M<span
+                        class="logo-ampersand">&</span>G</p>
+                <p>Aromas que transcendem o ambiente e tocam a alma.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Contato</h4>
+                <p><a href="mailto:mgaromas0@gmail.com"><i class="far fa-envelope"
+                            style="margin-right:6px;"></i>mgaromas0@gmail.com</a></p>
+                <p><a href="https://wa.me/5554996343116"><i class="fas fa-phone-alt" style="margin-right:6px;"></i>+55
+                        54 99634 3116</a></p>
+            </div>
+            <div class="footer-col">
+                <h4>Atendimento</h4>
+                <p>Segunda a Sexta</p>
+                <p>09:00 às 18:00</p>
+            </div>
+            <div class="footer-col">
+                <h4>Siga-nos</h4>
+                <p><a href="https://instagram.com/usemg_aromas" target="_blank" rel="noopener"><i
+                            class="fab fa-instagram" style="margin-right:6px;"></i>@usemg_aromas</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 M&G AROMAS — CNPJ: 21.907.109/0001-87</p>
+        </div>
+    </footer>
+
+    <script>
+        /* ── CARRINHO ── */
+        let carrinho = {};
+        let total = 0;
+
+        function carregarCarrinho() {
+            try {
+                const c = sessionStorage.getItem('mg_carrinho');
+                const t = sessionStorage.getItem('mg_total');
+                carrinho = c ? JSON.parse(c) : {};
+                total = t ? parseFloat(t) : 0;
+            } catch (e) { carrinho = {}; total = 0; }
+            atualizarBarra();
+        }
+
+        function adicionar(nome, preco, img, badgeId) {
+            if (carrinho[nome]) {
+                carrinho[nome].quantidade += 1;
+            } else {
+                carrinho[nome] = { preco, imagem: img, quantidade: 1 };
+            }
+            total = parseFloat((total + preco).toFixed(2));
+            salvar();
+            atualizarBarra();
+            mostrarBadge(badgeId);
+            mostrarToast('✓  ' + nome + ' adicionada');
+        }
+
+        function salvar() {
+            sessionStorage.setItem('mg_carrinho', JSON.stringify(carrinho));
+            sessionStorage.setItem('mg_total', total.toFixed(2));
+        }
+
+        function atualizarBarra() {
+            let qtd = 0;
+            for (let k in carrinho) qtd += carrinho[k].quantidade;
+            const countEl = document.getElementById('cart-count');
+            const totalEl = document.getElementById('cart-total');
+            const btnEl = document.getElementById('btn-finalizar');
+            if (countEl) countEl.textContent = qtd;
+            if (totalEl) totalEl.textContent = total.toFixed(2).replace('.', ',');
+            if (btnEl) btnEl.style.display = qtd > 0 ? 'inline-block' : 'none';
+        }
+
+        function irParaCheckout() {
+            if (!Object.keys(carrinho).length) { mostrarToast('Seu carrinho está vazio.'); return; }
+            window.location.href = 'checkout.html';
+        }
+
+        function mostrarToast(msg) {
+            const t = document.getElementById('toast');
+            if (!t) return;
+            t.textContent = msg;
+            t.className = '';
+            void t.offsetWidth;
+            t.className = 'show';
+            setTimeout(() => { t.className = ''; }, 3200);
+        }
+
+        function mostrarBadge(id) {
+            const b = document.getElementById('badge-' + id);
+            if (!b) return;
+            b.classList.add('visible');
+            setTimeout(() => b.classList.remove('visible'), 2000);
+        }
+
+        /* ── SLIDESHOW ── */
+        const slides = document.querySelectorAll('.slide');
+        const dotsWrap = document.getElementById('slideDots');
+        let cur = 0, slideTimer;
+
+        if (slides.length > 0 && dotsWrap) {
+            slides.forEach((_, i) => {
+                const d = document.createElement('button');
+                d.className = 'slide-dot' + (i === 0 ? ' active' : '');
+                d.setAttribute('aria-label', 'Slide ' + (i + 1));
+                d.onclick = () => { goToSlide(i); resetTimer(); };
+                dotsWrap.appendChild(d);
+            });
+
+            function goToSlide(n) {
+                slides[cur].classList.remove('active');
+                dotsWrap.children[cur].classList.remove('active');
+                cur = n;
+                slides[cur].classList.add('active');
+                dotsWrap.children[cur].classList.add('active');
+            }
+
+            function resetTimer() {
+                clearInterval(slideTimer);
+                slideTimer = setInterval(() => goToSlide((cur + 1) % slides.length), 4500);
+            }
+            resetTimer();
+
+            /* Swipe no hero para mobile */
+            let touchStartX = 0;
+            document.querySelector('.hero').addEventListener('touchstart', e => {
+                touchStartX = e.touches[0].clientX;
+            }, { passive: true });
+            document.querySelector('.hero').addEventListener('touchend', e => {
+                const dx = e.changedTouches[0].clientX - touchStartX;
+                if (Math.abs(dx) > 50) {
+                    goToSlide(dx < 0
+                        ? (cur + 1) % slides.length
+                        : (cur - 1 + slides.length) % slides.length);
+                    resetTimer();
+                }
+            }, { passive: true });
+        }
+
+        /* ── HAMBÚRGUER ── */
+        function toggleMenu() {
+            document.getElementById('menuSuspenso').classList.toggle('active');
+            document.getElementById('hamburguer').classList.toggle('open');
+        }
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('menuSuspenso');
+            const hamb = document.getElementById('hamburguer');
+            if (menu && hamb && !hamb.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.remove('active');
+                hamb.classList.remove('open');
+            }
+        });
+
+        /* ── SCROLL REVEAL ── */
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    observer.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        /* ── INIT ── */
+        document.addEventListener('DOMContentLoaded', carregarCarrinho);
+        window.addEventListener('pageshow', carregarCarrinho);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>Finalizar Pedido | M&G Aromas</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@200;300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bege: #c49466;
+            --bege-claro: #f7f2ed;
+            --preto-luxo: #1a1a1a;
+            --off-white: #faf9f6;
+            --texto: #5a5a5a;
+            --borda: #e8e4e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--off-white);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            color: var(--texto);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ══════════════════════════════
+           TOPO
+        ══════════════════════════════ */
+        .checkout-topo {
+            width: 100%;
+            background: #000;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-texto {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            letter-spacing: 8px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        .logo-ampersand {
+            font-style: italic;
+            color: var(--bege);
+            margin: 0 3px;
+        }
+
+        .checkout-step {
+            font-size: 0.55rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #555;
+        }
+
+        .checkout-step span {
+            color: var(--bege);
+        }
+
+        /* ══════════════════════════════
+           CONTAINER PRINCIPAL
+        ══════════════════════════════ */
+        .container-checkout {
+            background: white;
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.04);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 48px 20px;
+        }
+
+        /* ══════════════════════════════
+           LADO RESUMO
+        ══════════════════════════════ */
+        .lado-resumo {
+            background-color: #fdfcfb;
+            padding: 70px 60px;
+            border-right: 1px solid var(--borda);
+            transition: opacity 0.6s ease;
+        }
+
+        /* ══════════════════════════════
+           LADO FORMULÁRIO
+        ══════════════════════════════ */
+        .lado-formulario {
+            padding: 70px 55px;
+            background: #fff;
+        }
+
+        /* ══════════════════════════════
+           TÍTULOS
+        ══════════════════════════════ */
+        .secao-titulo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.9rem;
+            font-weight: 300;
+            margin-bottom: 44px;
+            color: var(--preto-luxo);
+            letter-spacing: 2px;
+        }
+
+        .secao-titulo::first-letter {
+            text-transform: uppercase;
+        }
+
+        /* ══════════════════════════════
+           ITENS DO CARRINHO
+        ══════════════════════════════ */
+        .item-resumo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--bege-claro);
+            gap: 12px;
+            animation: fadeItem 0.4s ease forwards;
+        }
+
+        @keyframes fadeItem {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+            min-width: 0;
+            /* permite truncar texto */
+        }
+
+        .item-info img {
+            width: 58px;
+            height: 58px;
+            object-fit: cover;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .item-nome {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 400;
+            color: var(--preto-luxo);
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+            /* evita overflow em telas pequenas */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .item-preco-unit {
+            color: var(--bege);
+            letter-spacing: 1px;
+            font-size: 0.68rem;
+        }
+
+        /* ══════════════════════════════
+           CONTROLES QUANTIDADE
+        ══════════════════════════════ */
+        .controles-qtd {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #faf9f6;
+            padding: 5px 10px;
+            border: 1px solid var(--borda);
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        .btn-qty {
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 0.75rem;
+            color: #bbb;
+            padding: 0;
+            transition: color 0.2s;
+            line-height: 1;
+            /* área de toque */
+            min-width: 28px;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-qty:hover {
+            color: var(--preto-luxo);
+        }
+
+        .qtd-numero {
+            font-size: 0.75rem;
+            min-width: 18px;
+            text-align: center;
+            color: var(--preto-luxo);
+        }
+
+        .btn-remover {
+            border: none;
+            background: none;
+            color: #ddd;
+            cursor: pointer;
+            margin-left: 4px;
+            font-size: 0.65rem;
+            transition: color 0.2s;
+            padding: 0;
+            min-width: 28px;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-remover:hover {
+            color: #999;
+        }
+
+        /* ══════════════════════════════
+           CARRINHO VAZIO
+        ══════════════════════════════ */
+        .carrinho-vazio {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .carrinho-vazio i {
+            font-size: 1.8rem;
+            color: #ddd;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .carrinho-vazio p {
+            font-size: 0.72rem;
+            color: #aaa;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ══════════════════════════════
+           TOTAL
+        ══════════════════════════════ */
+        .total-container {
+            margin-top: 44px;
+            padding-top: 24px;
+            border-top: 1px solid var(--preto-luxo);
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .total-label {
+            font-size: 0.65rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #aaa;
+        }
+
+        .total-valor {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.1rem;
+            color: var(--preto-luxo);
+        }
+
+        .total-valor small {
+            font-size: 0.9rem;
+            margin-right: 4px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+        }
+
+        .frete-note {
+            margin-top: 10px;
+            font-size: 0.56rem;
+            letter-spacing: 2px;
+            color: #bbb;
+            text-transform: uppercase;
+            text-align: right;
+        }
+
+        /* ══════════════════════════════
+           FORMULÁRIO
+        ══════════════════════════════ */
+        .campo-grupo {
+            margin-bottom: 28px;
+            position: relative;
+        }
+
+        .campo-label {
+            display: block;
+            font-size: 0.54rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #bbb;
+            margin-bottom: 8px;
+            transition: color 0.3s;
+        }
+
+        .campo-grupo:focus-within .campo-label {
+            color: var(--bege);
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 0;
+            border: none;
+            border-bottom: 1px solid var(--borda);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.82rem;
+            outline: none;
+            background: transparent;
+            color: var(--preto-luxo);
+            transition: border-color 0.3s;
+            /* altura mínima para toque */
+            min-height: 44px;
+        }
+
+        input:focus {
+            border-bottom-color: var(--bege);
+        }
+
+        input.erro {
+            border-bottom-color: #e87070;
+        }
+
+        .linha-dupla {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* ══════════════════════════════
+           BOTÃO ENVIAR
+        ══════════════════════════════ */
+        .btn-enviar {
+            background: var(--preto-luxo);
+            color: white;
+            width: 100%;
+            padding: 20px;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            font-size: 0.68rem;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: background 0.4s, letter-spacing 0.4s;
+            margin-top: 16px;
+            /* área de toque */
+            min-height: 56px;
+        }
+
+        .btn-enviar:hover:not(:disabled) {
+            background: var(--bege);
+            letter-spacing: 7px;
+        }
+
+        .btn-enviar:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Spinner */
+        .spinner {
+            display: none;
+            width: 14px;
+            height: 14px;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-enviar.carregando .btn-texto {
+            display: none;
+        }
+
+        .btn-enviar.carregando .spinner {
+            display: block;
+        }
+
+        /* ══════════════════════════════
+           VOLTAR
+        ══════════════════════════════ */
+        .btn-voltar {
+            display: block;
+            margin-top: 28px;
+            text-decoration: none;
+            color: #ccc;
+            font-size: 0.58rem;
+            letter-spacing: 2px;
+            text-align: center;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            padding: 10px 0;
+            /* área de toque */
+        }
+
+        .btn-voltar:hover {
+            color: var(--bege);
+        }
+
+        /* ══════════════════════════════
+           MENSAGEM SUCESSO
+        ══════════════════════════════ */
+        #mensagem-sucesso {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+            animation: fadeItem 0.6s ease forwards;
+        }
+
+        .icone-sucesso {
+            width: 60px;
+            height: 60px;
+            border: 1px solid var(--bege);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 28px;
+            color: var(--bege);
+            font-size: 1.4rem;
+        }
+
+        #mensagem-sucesso p {
+            font-size: 0.78rem;
+            line-height: 2.2;
+            letter-spacing: 0.5px;
+            color: var(--texto);
+            margin: 16px 0 32px;
+        }
+
+        .btn-voltar-loja {
+            display: inline-block;
+            background: var(--preto-luxo);
+            color: white;
+            text-decoration: none;
+            padding: 16px 36px;
+            font-size: 0.6rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            transition: background 0.4s;
+            min-height: 52px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-voltar-loja:hover {
+            background: var(--bege);
+        }
+
+        /* ══════════════════════════════
+           TABLET — até 900px
+        ══════════════════════════════ */
+        @media (max-width: 900px) {
+            .container-checkout {
+                grid-template-columns: 1fr;
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+
+            /* Formulário primeiro, resumo embaixo */
+            .lado-formulario {
+                order: 1;
+                padding: 50px 32px 40px;
+            }
+
+            .lado-resumo {
+                order: 2;
+                padding: 40px 32px 60px;
+                border-right: none;
+                border-top: 1px solid var(--borda);
+            }
+
+            .checkout-step {
+                display: none;
+            }
+
+            .secao-titulo {
+                font-size: 1.6rem;
+                margin-bottom: 32px;
+            }
+        }
+
+        /* ══════════════════════════════
+           MOBILE — até 600px
+        ══════════════════════════════ */
+        @media (max-width: 600px) {
+            .checkout-topo {
+                padding: 16px 4%;
+            }
+
+            .logo-texto {
+                font-size: 1.25rem;
+                letter-spacing: 6px;
+            }
+
+            .container-checkout {
+                margin: 0;
+            }
+
+            .lado-formulario {
+                padding: 36px 20px 32px;
+            }
+
+            .lado-resumo {
+                padding: 32px 20px 48px;
+            }
+
+            .secao-titulo {
+                font-size: 1.4rem;
+                margin-bottom: 28px;
+            }
+
+            /* Campos telefone e email empilham */
+            .linha-dupla {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            /* Itens do carrinho: imagem menor */
+            .item-info img {
+                width: 48px;
+                height: 48px;
+            }
+
+            .item-nome {
+                font-size: 0.72rem;
+            }
+
+            /* Controles mais compactos */
+            .controles-qtd {
+                padding: 4px 8px;
+                gap: 4px;
+            }
+
+            .btn-qty {
+                min-width: 32px;
+                min-height: 32px;
+                font-size: 0.8rem;
+            }
+
+            .qtd-numero {
+                font-size: 0.72rem;
+            }
+
+            .total-valor {
+                font-size: 1.8rem;
+            }
+
+            .btn-enviar {
+                font-size: 0.62rem;
+                letter-spacing: 4px;
+                padding: 18px;
+            }
+
+            .btn-enviar:hover:not(:disabled) {
+                letter-spacing: 5px;
+            }
+        }
+
+        /* ══════════════════════════════
+           MOBILE PEQUENO — até 400px
+        ══════════════════════════════ */
+        @media (max-width: 400px) {
+            .logo-texto {
+                font-size: 1.1rem;
+                letter-spacing: 5px;
+            }
+
+            .lado-formulario {
+                padding: 28px 16px 28px;
+            }
+
+            .lado-resumo {
+                padding: 28px 16px 40px;
+            }
+
+            .secao-titulo {
+                font-size: 1.2rem;
+            }
+
+            /* Controles de quantidade: remove imagem em telas muito pequenas */
+            .item-info img {
+                width: 40px;
+                height: 40px;
+            }
+
+            /* Empilha nome e controles verticalmente se necessário */
+            .item-resumo {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .item-info {
+                min-width: 0;
+                flex: 1 1 60%;
+            }
+
+            .controles-qtd {
+                flex: 0 0 auto;
+            }
+
+            .total-valor {
+                font-size: 1.6rem;
+            }
+
+            .btn-enviar {
+                font-size: 0.58rem;
+                letter-spacing: 3px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="checkout-topo">
+        <a href="index.html" class="logo-texto">M<span class="logo-ampersand">&</span>G</a>
+        <span class="checkout-step">
+            <span>01</span> — Carrinho &nbsp;/&nbsp;
+            <span>02</span> — Envio &nbsp;/&nbsp;
+            03 — Confirmação
+        </span>
+    </header>
+
+    <div class="container-checkout" id="checkout-box">
+
+        <!-- RESUMO -->
+        <div class="lado-resumo" id="lado-resumo">
+            <h2 class="secao-titulo">seu carrinho</h2>
+            <div id="lista-itens-checkout"></div>
+            <div class="total-container">
+                <span class="total-label">Subtotal</span>
+                <div class="total-valor">
+                    <small>R$</small><span id="valor-total-checkout">0,00</span>
+                </div>
+            </div>
+            <p class="frete-note">* frete calculado no contato</p>
+        </div>
+
+        <!-- FORMULÁRIO -->
+        <div class="lado-formulario">
+            <div id="conteudo-form">
+                <h2 class="secao-titulo">detalhes do envio</h2>
+                <form id="formPedidoGoogle" novalidate>
+
+                    <div class="campo-grupo">
+                        <label class="campo-label" for="campo-nome">Nome completo</label>
+                        <input type="text" id="campo-nome" name="Nome" autocomplete="name" inputmode="text" required>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label class="campo-label" for="campo-end">Endereço de entrega</label>
+                        <input type="text" id="campo-end" name="Endereco" autocomplete="street-address" inputmode="text"
+                            required>
+                    </div>
+
+                    <div class="linha-dupla">
+                        <div class="campo-grupo">
+                            <label class="campo-label" for="campo-tel">Telefone / WhatsApp</label>
+                            <input type="tel" id="campo-tel" name="Telefone" autocomplete="tel" inputmode="tel"
+                                placeholder="(XX) XXXXX-XXXX" required>
+                        </div>
+                        <div class="campo-grupo">
+                            <label class="campo-label" for="campo-email">E-mail</label>
+                            <input type="email" id="campo-email" name="Email" autocomplete="email" inputmode="email"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label class="campo-label" for="campo-obs">Observações (opcional)</label>
+                        <input type="text" id="campo-obs" name="Observacoes" inputmode="text">
+                    </div>
+
+                    <input type="hidden" name="Resumo_Pedido" id="hidden-resumo">
+                    <input type="hidden" name="Total_Pagar" id="hidden-total">
+
+                    <button type="submit" class="btn-enviar" id="btn-finalizar-checkout">
+                        <span class="btn-texto">Finalizar Pedido</span>
+                        <span class="spinner"></span>
+                    </button>
+                </form>
+                <a href="index.html" class="btn-voltar">← Voltar para a coleção</a>
+            </div>
+
+            <!-- SUCESSO -->
+            <div id="mensagem-sucesso">
+                <div class="icone-sucesso"><i class="fa fa-check"></i></div>
+                <h2 class="secao-titulo" style="margin-bottom: 0;">pedido recebido</h2>
+                <p>Agradecemos a sua preferência.<br>Entraremos em contato via WhatsApp em breve.</p>
+                <a href="index.html" class="btn-voltar-loja">Voltar à loja</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycbz71W7gyoK9KG4yaJhz5cLcrb7mFpDtUBI8gBA8CFwYGEfSJy-17_DZmY-Dx9UFF2A/exec';
+        let dadosCarrinho = {};
+
+        /* ── INICIALIZA ── */
+        function inicializarCheckout() {
+            try {
+                const salvo = sessionStorage.getItem('mg_carrinho');
+                dadosCarrinho = salvo ? JSON.parse(salvo) : {};
+            } catch (e) { dadosCarrinho = {}; }
+            renderizarItens();
+        }
+
+        /* ── RENDERIZA ITENS ── */
+        function renderizarItens() {
+            const container = document.getElementById('lista-itens-checkout');
+            const valorEl = document.getElementById('valor-total-checkout');
+            let novoTotal = 0;
+            let resumoTexto = '';
+
+            if (!Object.keys(dadosCarrinho).length) {
+                container.innerHTML = `
+                    <div class="carrinho-vazio">
+                        <i class="fa fa-shopping-bag"></i>
+                        <p>Carrinho vazio</p>
+                    </div>`;
+                valorEl.textContent = '0,00';
+                return;
+            }
+
+            container.innerHTML = '';
+            for (let nome in dadosCarrinho) {
+                const item = dadosCarrinho[nome];
+                novoTotal += item.preco * item.quantidade;
+                resumoTexto += `${nome} (x${item.quantidade}) | `;
+
+                const div = document.createElement('div');
+                div.className = 'item-resumo';
+                div.innerHTML = `
+                    <div class="item-info">
+                        <img src="${item.imagem}" alt="${nome}">
+                        <div style="min-width:0;">
+                            <span class="item-nome">${nome}</span>
+                            <span class="item-preco-unit">R$ ${item.preco.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                    </div>
+                    <div class="controles-qtd">
+                        <button type="button" class="btn-qty"
+                                onclick="alterarQtd('${nome}', -1)"
+                                aria-label="Diminuir quantidade">—</button>
+                        <span class="qtd-numero">${item.quantidade}</span>
+                        <button type="button" class="btn-qty"
+                                onclick="alterarQtd('${nome}', 1)"
+                                aria-label="Aumentar quantidade">+</button>
+                        <button type="button" class="btn-remover"
+                                onclick="removerItem('${nome}')"
+                                aria-label="Remover ${nome}">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>`;
+                container.appendChild(div);
+            }
+
+            const totalFmt = novoTotal.toFixed(2).replace('.', ',');
+            valorEl.textContent = totalFmt;
+            document.getElementById('hidden-total').value = 'R$ ' + totalFmt;
+            document.getElementById('hidden-resumo').value = resumoTexto.replace(/\s\|\s$/, '');
+            sessionStorage.setItem('mg_total', novoTotal.toFixed(2));
+        }
+
+        /* ── ALTERAR QUANTIDADE ── */
+        function alterarQtd(nome, delta) {
+            if (!dadosCarrinho[nome]) return;
+            dadosCarrinho[nome].quantidade += delta;
+            if (dadosCarrinho[nome].quantidade <= 0) delete dadosCarrinho[nome];
+            salvarERecarregar();
+        }
+
+        /* ── REMOVER ITEM ── */
+        function removerItem(nome) {
+            delete dadosCarrinho[nome];
+            salvarERecarregar();
+        }
+
+        /* ── SALVAR ── */
+        function salvarERecarregar() {
+            if (!Object.keys(dadosCarrinho).length) {
+                sessionStorage.removeItem('mg_carrinho');
+                sessionStorage.removeItem('mg_total');
+            } else {
+                sessionStorage.setItem('mg_carrinho', JSON.stringify(dadosCarrinho));
+            }
+            renderizarItens();
+        }
+
+        /* ── MÁSCARA TELEFONE ── */
+        document.getElementById('campo-tel').addEventListener('input', function () {
+            let v = this.value.replace(/\D/g, '').slice(0, 11);
+            if (v.length > 10) {
+                v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+            } else if (v.length > 6) {
+                v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+            } else if (v.length > 2) {
+                v = v.replace(/^(\d{2})(\d+)/, '($1) $2');
+            }
+            this.value = v;
+        });
+
+        /* ── SUBMIT ── */
+        document.getElementById('formPedidoGoogle').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            let valido = true;
+            this.querySelectorAll('input[required]').forEach(input => {
+                if (!input.value.trim()) {
+                    input.classList.add('erro');
+                    valido = false;
+                } else {
+                    input.classList.remove('erro');
+                }
+            });
+            if (!valido) {
+                /* scroll suave até o primeiro erro em mobile */
+                const primeiroErro = this.querySelector('input.erro');
+                if (primeiroErro) primeiroErro.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            if (!Object.keys(dadosCarrinho).length) {
+                alert('Seu carrinho está vazio.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-finalizar-checkout');
+            btn.disabled = true;
+            btn.classList.add('carregando');
+
+            const formData = new FormData(this);
+            fetch(URL_SCRIPT, { method: 'POST', body: formData })
+                .then(() => {
+                    sessionStorage.removeItem('mg_carrinho');
+                    sessionStorage.removeItem('mg_total');
+                    document.getElementById('conteudo-form').style.display = 'none';
+                    document.getElementById('mensagem-sucesso').style.display = 'block';
+                    /* scroll pro topo em mobile para ver confirmação */
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    const resumo = document.getElementById('lado-resumo');
+                    resumo.style.opacity = '0.3';
+                    resumo.style.pointerEvents = 'none';
+                })
+                .catch(() => {
+                    btn.disabled = false;
+                    btn.classList.remove('carregando');
+                    alert('Erro ao enviar o pedido. Tente novamente.');
+                });
+        });
+
+        /* ── REMOVE ERRO AO DIGITAR ── */
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', () => input.classList.remove('erro'));
+        });
+
+        document.addEventListener('DOMContentLoaded', inicializarCheckout);
+        window.addEventListener('pageshow', inicializarCheckout);
+    </script>
+</body>
+
+</html>

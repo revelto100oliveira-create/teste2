@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>Ritual de Cuidados | M&G Aromas</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@100;200;300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bege-ouro: #c49466;
+            --preto-fosco: #2c2c2c;
+            --off-white: #faf9f6;
+            --creme-suave: #fdfcfb;
+            --transicao: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--off-white);
+            color: var(--preto-fosco);
+            font-family: 'Montserrat', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+        }
+
+        @keyframes reveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .nav-minimal {
+            padding: 30px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .voltar-link {
+            text-decoration: none;
+            color: var(--preto-fosco);
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 400;
+            transition: var(--transicao);
+        }
+
+        .voltar-link:hover {
+            color: var(--bege-ouro);
+        }
+
+        .hero-small {
+            padding: 140px 5% 60px;
+            text-align: center;
+            animation: reveal 1.2s ease-out;
+        }
+
+        .hero-small .label {
+            font-size: 0.7rem;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: var(--bege-ouro);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .hero-small h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 300;
+            font-style: italic;
+        }
+
+        .grid-cuidados {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5% 100px;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 30px;
+        }
+
+        .card-ritual {
+            background: white;
+            padding: 50px 40px;
+            border: 1px solid #f0ede9;
+            transition: var(--transicao);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: reveal 1.5s ease-out;
+        }
+
+        .card-ritual:hover {
+            border-color: var(--bege-ouro);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+        }
+
+        .card-ritual i {
+            font-size: 2rem;
+            color: var(--bege-ouro);
+            margin-bottom: 30px;
+            font-weight: 200;
+        }
+
+        .card-ritual h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .card-ritual p {
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: #777;
+            margin-bottom: 0;
+        }
+
+        /* Layout Assimétrico do Grid */
+        .item-1 {
+            grid-column: span 7;
+        }
+
+        .item-2 {
+            grid-column: span 5;
+            background-color: var(--creme-suave);
+        }
+
+        .item-3 {
+            grid-column: span 5;
+        }
+
+        .item-4 {
+            grid-column: span 7;
+            background-color: var(--creme-suave);
+        }
+
+        .footer-simples {
+            text-align: center;
+            padding: 80px 5%;
+            background-color: white;
+            border-top: 1px solid #f0ede9;
+        }
+
+        .btn-ritual {
+            font-family: 'Montserrat', sans-serif;
+            text-decoration: none;
+            color: var(--preto-fosco);
+            font-size: 0.65rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            padding: 20px 40px;
+            border: 1px solid var(--preto-fosco);
+            display: inline-block;
+            transition: var(--transicao);
+        }
+
+        .btn-ritual:hover {
+            background: var(--preto-fosco);
+            color: white;
+        }
+
+        @media (max-width: 900px) {
+
+            .item-1,
+            .item-2,
+            .item-3,
+            .item-4 {
+                grid-column: span 12;
+            }
+
+            .hero-small {
+                padding-top: 100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="nav-minimal">
+        <a href="index.html" class="voltar-link">← Retornar à boutique</a>
+    </nav>
+
+    <div class="hero-small">
+        <span class="label">Preservação & Harmonia</span>
+        <h1>O Ritual de Cuidados</h1>
+    </div>
+
+    <main class="grid-cuidados">
+
+        <div class="card-ritual item-1">
+            <i class="fa-light fa-scissors"></i>
+            <h3>A Escultura do Pavio</h3>
+            <p>Mantenha sempre o pavio aparado em 5mm. Este gesto simples garante uma chama estável e evita que o vidro
+                escureça, mantendo a estética da sua peça impecável do início ao fim.</p>
+        </div>
+
+        <div class="card-ritual item-2">
+            <i class="fa-light fa-hourglass-start"></i>
+            <h3>Memória Olfativa</h3>
+            <p>Na primeira queima, deixe a piscina de cera atingir as bordas. Isso educa a cera para queimar por igual,
+                evitando o desperdício nas laterais do frasco.</p>
+        </div>
+
+        <div class="card-ritual item-3">
+            <i class="fa-light fa-shield-heart"></i>
+            <h3>A Calma da Chama</h3>
+            <p>Sua vela é um objeto de calma. Não a deixe acesa por mais de 3 horas e evite correntes de ar para que o
+                perfume se espalhe de forma uniforme e serena.</p>
+        </div>
+
+        <div class="card-ritual item-4">
+            <i class="fa-light fa-wind"></i>
+            <h3>O Silêncio Final</h3>
+            <p>Ao encerrar o ritual, abafe a chama com a tampa. Evite soprar para que o aroma residual do pavio não
+                interfira na fragrância que agora preenche o seu ambiente.</p>
+        </div>
+
+    </main>
+
+    <footer class="footer-simples">
+        <p style="font-family: 'Cormorant Garamond'; font-size: 1.5rem; font-style: italic; margin-bottom: 40px;">Cuidar
+            da sua vela é cuidar do seu próprio momento.</p>
+        <a href="index.html" class="btn-ritual">Ver Coleções</a>
+    </footer>
+
+</body>
+
+</html>
